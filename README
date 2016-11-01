@@ -41,7 +41,7 @@ which specifies instruction patterns to be generated. Command line
 options can be used to restrict the set of instruction patterns
 used. For example:
 
-  ./risugen --numinsns 10000 --pattern 'VQSHL.*imm.*' arm.risu vqshlimm.out
+  ./risugen --numinsns 10000 --pattern 'VQSHL.*imm.*' arm/risugen/arm.risu vqshlimm.out
 
 reads the configuration file arm.risu, and generates 10000 instructions
 based on the instruction patterns matching the regular expression
