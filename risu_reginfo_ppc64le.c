@@ -28,8 +28,9 @@ void reginfo_init(struct reginfo *ri, ucontext_t *uc)
     int i;
     memset(ri, 0, sizeof(*ri));
 
-    ri->faulting_insn = *((uint32_t *)uc->uc_mcontext.regs->nip);
-    ri->nip = uc->uc_mcontext.regs->nip - image_start_address;
+    ri->faulting_insn = *((uint32_t *)uc->uc_mcontext.gp_regs[PT_NIP]);
+    ri->prev_insn = *((uint32_t *)(uc->uc_mcontext.gp_regs[PT_NIP] - 4));
+    ri->nip = uc->uc_mcontext.gp_regs[PT_NIP] - image_start_address;
 
     for (i = 0; i < NGREG; i++) {
         ri->gregs[i] = uc->uc_mcontext.gp_regs[i];
@@ -105,9 +106,9 @@ void reginfo_dump(struct reginfo *ri, int is_master)
 {
     int i;
     if (is_master) {
-        fprintf(stderr, "  faulting insn \e[1;101;37m0x%x\e[0m\n", ri->faulting_insn);
-        fprintf(stderr, "  prev insn     \e[1;101;37m0x%x\e[0m\n", ri->prev_insn);
-        fprintf(stderr, "  prev addr     \e[1;101;37m0x%" PRIx64 "\e[0m\n\n", ri->prev_addr);
+        fprintf(stderr, "  faulting insn 0x%x\n", ri->faulting_insn);
+        fprintf(stderr, "  prev insn     0x%x\n", ri->prev_insn);
+        fprintf(stderr, "  prev addr    0x%" PRIx64 "\n\n", ri->nip);
     }
 
     for (i = 0; i < 16; i++) {
