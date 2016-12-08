@@ -28,6 +28,7 @@ void advance_pc(void *vuc)
 {
     ucontext_t *uc = (ucontext_t*)vuc;
     uc->uc_mcontext.gp_regs[PT_NIP] += 4;
+    report_test_status((void *) uc->uc_mcontext.pc);
 }
 
 void set_x0(void *vuc, uint64_t x0)
